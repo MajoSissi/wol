@@ -7,28 +7,188 @@
   <title>WOL Manager</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
   <style>
+    :root {
+      --bg-color: #282c34;
+      --text-color: #abb2bf;
+      --card-bg: #21252b;
+      --border-color: #181a1f;
+      --primary-color: #61afef;
+      --success-color: #98c379;
+      --warning-color: #e5c07b;
+      --danger-color: #e06c75;
+      --info-color: #56b6c2;
+      --input-bg: #1d1f23;
+    }
+
+    body {
+      background-color: var(--bg-color);
+      color: var(--text-color);
+    }
+
+    .card {
+      background-color: var(--card-bg);
+      border-color: var(--border-color);
+      color: var(--text-color);
+    }
+
+    .modal-content {
+      background-color: var(--card-bg);
+      color: var(--text-color);
+      border-color: var(--border-color);
+    }
+
+    .modal-header, .modal-footer {
+      border-color: var(--border-color);
+    }
+
+    .form-control, .form-select {
+      background-color: var(--input-bg);
+      border-color: var(--border-color);
+      color: var(--text-color);
+    }
+
+    .form-control:focus, .form-select:focus {
+      background-color: var(--input-bg);
+      color: var(--text-color);
+      border-color: var(--primary-color);
+      box-shadow: 0 0 0 0.25rem rgba(97, 175, 239, 0.25);
+    }
+
+    .btn-close {
+      filter: invert(1) grayscale(100%) brightness(200%);
+    }
+
+    .text-muted {
+      color: #7f848e !important;
+    }
+
+    .bg-light {
+      background-color: #2c313a !important;
+    }
+
     .status-dot {
       height: 15px;
       width: 15px;
-      background-color: #bbb;
+      background-color: #5c6370;
       border-radius: 50%;
       display: inline-block;
     }
 
     .status-online {
-      background-color: #28a745;
-      /* Green */
-      box-shadow: 0 0 5px #28a745;
+      background-color: var(--success-color);
+      box-shadow: 0 0 5px var(--success-color);
     }
 
     .status-offline {
-      background-color: #dc3545;
-      /* Red */
+      background-color: var(--danger-color);
     }
 
     .status-error {
-      background-color: #ffc107;
-      /* Yellow */
+      background-color: var(--warning-color);
+    }
+
+    /* Button overrides for Atom One Dark theme */
+    .btn-primary {
+      background-color: var(--primary-color);
+      border-color: var(--primary-color);
+      color: #282c34;
+    }
+    .btn-primary:hover {
+      background-color: #4d78cc;
+      border-color: #4d78cc;
+      color: #282c34;
+    }
+
+    .btn-success {
+      background-color: var(--success-color);
+      border-color: var(--success-color);
+      color: #282c34;
+    }
+    .btn-success:hover {
+      background-color: #7da75e;
+      border-color: #7da75e;
+      color: #282c34;
+    }
+
+    .btn-danger {
+      background-color: var(--danger-color);
+      border-color: var(--danger-color);
+      color: #282c34;
+    }
+    .btn-danger:hover {
+      background-color: #be5058;
+      border-color: #be5058;
+      color: #282c34;
+    }
+
+    .btn-info {
+      background-color: var(--info-color);
+      border-color: var(--info-color);
+      color: #282c34;
+    }
+    .btn-info:hover {
+      background-color: #3d8b96;
+      border-color: #3d8b96;
+      color: #282c34;
+    }
+
+    .btn-outline-secondary {
+      color: #9da5b4;
+      border-color: #4b5363;
+    }
+    .btn-outline-secondary:hover {
+      background-color: #4b5363;
+      color: #fff;
+      border-color: #4b5363;
+    }
+
+    .btn-outline-primary {
+      color: var(--primary-color);
+      border-color: var(--primary-color);
+    }
+    .btn-outline-primary:hover {
+      background-color: var(--primary-color);
+      color: #282c34;
+    }
+
+    .btn-outline-success {
+      color: var(--success-color);
+      border-color: var(--success-color);
+    }
+    .btn-outline-success:hover {
+      background-color: var(--success-color);
+      color: #282c34;
+    }
+
+    .btn-outline-danger {
+      color: var(--danger-color);
+      border-color: var(--danger-color);
+    }
+    .btn-outline-danger:hover {
+      background-color: var(--danger-color);
+      color: #282c34;
+    }
+
+    .btn-outline-info {
+      color: var(--info-color);
+      border-color: var(--info-color);
+    }
+    .btn-outline-info:hover {
+      background-color: var(--info-color);
+      color: #282c34;
+    }
+
+    /* Text color overrides */
+    .text-info { color: var(--info-color) !important; }
+    .text-success { color: var(--success-color) !important; }
+    .text-danger { color: var(--danger-color) !important; }
+    .text-warning { color: var(--warning-color) !important; }
+    .border-secondary { border-color: var(--border-color) !important; }
+
+    /* Ensure placeholders are visible on dark background */
+    .form-control::placeholder {
+      color: #6c727c;
+      opacity: 1;
     }
   </style>
 </head>
@@ -38,7 +198,7 @@
     <div class="d-flex justify-content-between align-items-center mb-4">
       <h1>Wake-on-LAN Manager</h1>
       <div>
-        <button class="btn btn-info text-white me-2" onclick="showLogs()">Real-time Logs</button>
+        <button class="btn btn-info me-2" onclick="showLogs()">Real-time Logs</button>
         <button class="btn btn-primary" onclick="showAddModal()">Add Device</button>
       </div>
     </div>
@@ -53,7 +213,7 @@
           <h5 class="modal-title" id="logModalTitle">System Logs</h5>
           <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
         </div>
-        <div class="modal-body bg-dark text-light font-monospace" style="max-height: 500px; overflow-y: auto;">
+        <div class="modal-body font-monospace" style="max-height: 500px; overflow-y: auto;">
           <div id="logContent">Loading...</div>
         </div>
         <div class="modal-footer">
@@ -184,6 +344,16 @@
       fetchLogs();
     }
 
+    function escapeHtml(text) {
+      if (!text) return text;
+      return text
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+    }
+
     async function loadDevices() {
       const response = await fetch('/api/devices');
       const devices = await response.json();
@@ -196,39 +366,47 @@
         col.className = 'col-sm-6 col-md-4 col-lg-3 mb-4';
         col.dataset.name = device.name;
         const safeId = btoa(unescape(encodeURIComponent(device.name))).replace(/[^a-zA-Z0-9]/g, '');
+        const safeName = escapeHtml(device.name);
 
         let infoHtml = '';
         if (device.sub_devices && device.sub_devices.length > 0) {
           const first = device.sub_devices[0];
-          infoHtml = `<div class="text-muted small text-truncate" title="${first.mac}">MAC: ${first.mac}</div>
-                         <div class="text-muted small text-truncate" title="${first.ip}">Host: ${first.ip}</div>
+          infoHtml = `<div class="text-muted small text-truncate" title="${escapeHtml(first.mac)}">MAC: ${escapeHtml(first.mac)}</div>
+                         <div class="text-muted small text-truncate" title="${escapeHtml(first.ip)}">Host: ${escapeHtml(first.ip)}</div>
                          <div class="text-muted small mt-1">Group: ${device.sub_devices.length} devices</div>`;
         } else {
-          infoHtml = `<div class="text-muted small text-truncate" title="${device.mac}">MAC: ${device.mac}</div>
-                         <div class="text-muted small text-truncate" title="${device.ip}">Host: ${device.ip}</div>`;
+          infoHtml = `<div class="text-muted small text-truncate" title="${escapeHtml(device.mac)}">MAC: ${escapeHtml(device.mac)}</div>
+                         <div class="text-muted small text-truncate" title="${escapeHtml(device.ip)}">Host: ${escapeHtml(device.ip)}</div>`;
         }
 
         col.innerHTML = `
             <div class="card h-100 shadow-sm">
                 <div class="card-body p-3">
                     <div class="d-flex justify-content-between align-items-center mb-2">
-                        <h5 class="card-title mb-0 text-truncate" title="${device.name}">${device.name}</h5>
+                        <h5 class="card-title mb-0 text-truncate" title="${safeName}">${safeName}</h5>
                         <span id="status-${safeId}" class="status-dot" title="Checking..."></span>
                     </div>
                     <div class="mb-3">
                         ${infoHtml}
                     </div>
                     <div class="d-grid gap-2">
-                        <button id="wake-btn-${safeId}" class="btn btn-success btn-sm" onclick="wakeDevice('${device.name}', '${safeId}')">Wake</button>
+                        <button class="btn btn-primary btn-sm btn-wake" id="wake-btn-${safeId}">Wake</button>
                         <div class="btn-group btn-group-sm">
-                            <button class="btn btn-outline-info" onclick="showLogs('${device.name}')">Logs</button>
-                            <button class="btn btn-outline-secondary" onclick='editDevice(${JSON.stringify(device)})'>Edit</button>
-                            <button class="btn btn-outline-danger" onclick="deleteDevice('${device.name}')">Del</button>
+                            <button class="btn btn-outline-secondary btn-logs">Logs</button>
+                            <button class="btn btn-outline-secondary btn-edit">Edit</button>
+                            <button class="btn btn-outline-danger btn-del">Del</button>
                         </div>
                     </div>
                 </div>
             </div>
         `;
+
+        // Attach event listeners safely to avoid quoting issues
+        col.querySelector('.btn-wake').addEventListener('click', () => wakeDevice(device.name, safeId));
+        col.querySelector('.btn-logs').addEventListener('click', () => showLogs(device.name));
+        col.querySelector('.btn-edit').addEventListener('click', () => editDevice(device));
+        col.querySelector('.btn-del').addEventListener('click', () => deleteDevice(device.name));
+
         container.appendChild(col);
       });
 
@@ -510,6 +688,7 @@
 
     async function wakeDevice(name, safeId) {
       const btn = document.getElementById(`wake-btn-${safeId}`);
+      if (!btn) return;
       const originalText = btn.innerText;
 
       btn.disabled = true;
@@ -519,16 +698,16 @@
         const response = await fetch('/api/wake/' + encodeURIComponent(name), { method: 'POST' });
         if (response.ok) {
           btn.innerText = 'Sent!';
-          btn.classList.remove('btn-success');
+          btn.classList.remove('btn-primary');
           btn.classList.add('btn-outline-success');
         } else {
           btn.innerText = 'Failed';
-          btn.classList.remove('btn-success');
+          btn.classList.remove('btn-primary');
           btn.classList.add('btn-danger');
         }
       } catch (e) {
         btn.innerText = 'Error';
-        btn.classList.remove('btn-success');
+        btn.classList.remove('btn-primary');
         btn.classList.add('btn-danger');
       }
 
@@ -536,7 +715,7 @@
         btn.disabled = false;
         btn.innerText = originalText;
         btn.classList.remove('btn-outline-success', 'btn-danger');
-        btn.classList.add('btn-success');
+        btn.classList.add('btn-primary');
       }, 2000);
     }
 
