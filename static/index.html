@@ -611,14 +611,6 @@
         return;
       }
 
-      // Fill legacy fields with first device data for backward compatibility/display
-      if (device.sub_devices.length > 0) {
-        device.mac = device.sub_devices[0].mac;
-        device.ip = device.sub_devices[0].ip;
-        device.port = device.sub_devices[0].port;
-        device.broadcast_ip = device.sub_devices[0].broadcast_ip;
-      }
-
       let method = 'POST';
       let url = '/api/devices';
       if (originalName) {

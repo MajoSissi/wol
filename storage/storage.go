@@ -19,10 +19,10 @@ type SubDevice struct {
 
 type Device struct {
 	Name        string      `json:"name"`
-	MAC         string      `json:"mac"`
-	IP          string      `json:"ip"`
-	Port        int         `json:"port"`
-	BroadcastIP string      `json:"broadcast_ip"`
+	MAC         string      `json:"mac,omitempty"`
+	IP          string      `json:"ip,omitempty"`
+	Port        int         `json:"port,omitempty"`
+	BroadcastIP string      `json:"broadcast_ip,omitempty"`
 	SubDevices  []SubDevice `json:"sub_devices,omitempty"`
 }
 
@@ -100,6 +100,14 @@ func (s *Store) AddDevice(d Device) error {
 		return err
 	}
 
+	// Clear top-level fields if SubDevices is present to avoid duplication
+	if len(d.SubDevices) > 0 {
+		d.MAC = ""
+		d.IP = ""
+		d.Port = 0
+		d.BroadcastIP = ""
+	}
+
 	for _, dev := range s.Devices {
 		if dev.Name == d.Name {
 			return errors.New("device with this name already exists")
@@ -142,6 +150,14 @@ func (s *Store) UpdateDevice(oldName string, d Device) error {
 
 	if err := d.Validate(); err != nil {
 		return err
+	}
+
+	// Clear top-level fields if SubDevices is present to avoid duplication
+	if len(d.SubDevices) > 0 {
+		d.MAC = ""
+		d.IP = ""
+		d.Port = 0
+		d.BroadcastIP = ""
 	}
 
 	// If name is changing, check for conflict
