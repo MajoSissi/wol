@@ -120,3 +120,8 @@ Generated automatically on first run.
   ]
 }
 ```
+
+*   `port`: Web server listening port.
+*   `log_dir`: Log storage directory.
+*   `log_retention_days`: Log retention days.
+*   `broadcast_ip`: Broadcast address. **Leave empty ("") to automatically scan all interfaces**.
