@@ -1,14 +1,11 @@
-# WOL Manager (AI-Driven)
+# WOL Manager
 
 [中文](README.md) | [English](README_EN.md)
 
 这是一个简单而强大的 Wake-on-LAN (WOL) 网络唤醒管理工具。
 
-> **声明**: 本项目的所有代码、逻辑及文档均完全由 AI (GitHub Copilot) 驱动编写。
-
 ### 功能特性
 
-*   **Web 管理界面**: 基于 Bootstrap 5 的现代化响应式界面，采用深色主题 (Atom One Dark 风格)，支持卡片式设备展示。
 *   **智能广播 (Smart Broadcast)**: 
     *   支持指定广播 IP。
     *   **自动发现**: 如果留空广播 IP，系统将自动遍历所有 IPv4 网络接口发送 Magic Packet，确保在多网卡环境下也能成功唤醒。

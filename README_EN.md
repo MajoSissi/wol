@@ -1,10 +1,8 @@
-# WOL Manager (AI-Driven)
+# WOL Manager
 
 [中文](README.md) | [English](README_EN.md)
 
 A simple yet powerful Wake-on-LAN (WOL) management tool.
-
-> **Disclaimer**: All code, logic, and documentation in this project are entirely AI-driven (GitHub Copilot).
 
 ### Features
 
