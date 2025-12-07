@@ -9,6 +9,7 @@ import (
 	"log"
 	"net/http"
 	"net/url"
+	"sync"
 
 	"wol/logger"
 	"wol/storage"
@@ -241,12 +242,43 @@ func handlePing(w http.ResponseWriter, r *http.Request) {
 	}
 
 	if len(device.SubDevices) > 0 {
-		// For groups, we check if the FIRST device is online
-		online := false
-		if device.SubDevices[0].IP != "" {
-			online = ping(device.SubDevices[0].IP)
+		total := len(device.SubDevices)
+		details := make([]bool, total)
+		var wg sync.WaitGroup
+
+		for i, sub := range device.SubDevices {
+			wg.Add(1)
+			go func(i int, ip string) {
+				defer wg.Done()
+				if ip != "" && ping(ip) {
+					details[i] = true
+				}
+			}(i, sub.IP)
 		}
-		json.NewEncoder(w).Encode(map[string]bool{"online": online})
+		wg.Wait()
+
+		onlineCount := 0
+		for _, online := range details {
+			if online {
+				onlineCount++
+			}
+		}
+
+		overallOnline := false
+		if device.PingMode == "all" {
+			overallOnline = (onlineCount == total)
+		} else {
+			// Default "any"
+			overallOnline = (onlineCount > 0)
+		}
+
+		json.NewEncoder(w).Encode(map[string]interface{}{
+			"online":       overallOnline,
+			"total":        total,
+			"online_count": onlineCount,
+			"details":      details,
+			"mode":         device.PingMode,
+		})
 		return
 	}
 
@@ -256,7 +288,16 @@ func handlePing(w http.ResponseWriter, r *http.Request) {
 	}
 
 	online := ping(device.IP)
-	json.NewEncoder(w).Encode(map[string]bool{"online": online})
+	onlineCount := 0
+	if online {
+		onlineCount = 1
+	}
+	json.NewEncoder(w).Encode(map[string]interface{}{
+		"online":       online,
+		"total":        1,
+		"online_count": onlineCount,
+		"details":      []bool{online},
+	})
 }
 
 func handleLogs(w http.ResponseWriter, r *http.Request) {

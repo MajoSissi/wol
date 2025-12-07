@@ -24,6 +24,7 @@ type Device struct {
 	Port        int         `json:"port,omitempty"`
 	BroadcastIP string      `json:"broadcast_ip,omitempty"`
 	SubDevices  []SubDevice `json:"sub_devices,omitempty"`
+	PingMode    string      `json:"ping_mode,omitempty"` // "any" or "all"
 }
 
 type Store struct {
