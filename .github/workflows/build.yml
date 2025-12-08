@@ -42,8 +42,14 @@ jobs:
         mkdir -p build
         GOOS=windows GOARCH=amd64 go build -ldflags "-H=windowsgui" -o build/wol-windows.exe
 
-    - name: Upload Artifacts
+    - name: Upload Windows Artifact
       uses: actions/upload-artifact@v4
       with:
-        name: wol-binaries
-        path: build/
+        name: wol-windows
+        path: build/wol-windows.exe
+
+    - name: Upload Linux Artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: wol-linux
+        path: build/wol-linux
